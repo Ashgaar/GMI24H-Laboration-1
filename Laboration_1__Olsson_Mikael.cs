@@ -1,37 +1,44 @@
 ﻿using System;
 using LaborationInterfaces;
 using System.IO;
+using System.Collections.Generic;
 
-//Namnge namespace med ditt namn. Till exempel: Land_Rikard
+
 namespace Olsson_Mikael
 {
-    //Byt X mot laborationens nummer. Till exempel: Laboration_1 : ILaboration_1
     public class Laboration_1 : ILaboration_1
     {
-        //Ange funktionssignaturer enligt interfacet.
-        //Detta exempel kommer från Laboration 1.
+        List<double> times = new List<double>();
+        
         static void Main(string[] args)
         {
-            var lab1 = new Laboration_1();
+            Laboration_1 lab1 = new Laboration_1();
+            Random random = new Random();
+
+
+            for (int i = 0; i < 10; i++)
+            {
+                int based = 10000000;
+                int increment = 2500000;
+                int compare = 3;
+                int runs = based + i * increment;
+                Console.WriteLine($"Phase {i+1} out of 10, using size {runs}");
+                int[] arrayRuns = new int[runs];
+                for (int j = 0; j < arrayRuns.Length; j++)
+                {
+                    arrayRuns[j] = random.Next(0, 250);
+                }
+                lab1.NOfOccurrences(arrayRuns, compare);
+                //lab1.MaxDiff_BruteForce(arrayRuns);
+                lab1.MaxDiff_Improved(arrayRuns);
+                //lab1.ReverseArray(arrayRuns);
+                lab1.ReverseArray_Improved(arrayRuns);
+            }
+
+            lab1.writeTimesToFile("../../runTime.csv");
 
             
-            int[] arr = new int[10] { 1, 3, 4, 2, 1, 3, 1, 3, 4, 3 };
-            int i = 3;
-            var start = lab1.start();
-            Console.WriteLine(lab1.NOfOccurrences(arr, i));
-            var stop = lab1.stop();
-            var ms = lab1.executionTime(start, stop);
-            
-
-            var startMaxDiff = lab1.start();
-            int[] arr2 = new int[7] { 7, 4, 9, 2, 6, 1, 3 };
-            Console.WriteLine(lab1.MaxDiff_BruteForce(arr2));
-            Console.WriteLine(lab1.MaxDiff_Improved(arr2));
-
-            int[] arr3 = new int[5] { 1, 2, 3, 4, 5 };
-            lab1.ReverseArray(arr3);
-
-            Console.Write("Press any key to exit.");
+            Console.Write("Press enter to exit.");
             Console.ReadLine();
         }
 
@@ -52,17 +59,21 @@ namespace Olsson_Mikael
         /// <returns>The number of occurrences of <paramref name="value"/> in <paramref name="inputArray"/>.</returns>
         public uint NOfOccurrences(int[] inputArray, int value)
         {
-            //loop of the array and count the number of occurences of the value
-            uint count = 0;
-            for (int i = 0; i < inputArray.Length; i++)
+            DateTime startTime = DateTime.Now;
+            uint count = 0; //O(1)
+            for (int i = 0; i < inputArray.Length; i++) //O(n)
             {
-                if (inputArray[i] == value)
+                if (inputArray[i] == value) //O(1)
                 {
-                    count++;
+                    count++; //O(1)
                 }
             }
-            
-            return count;
+            DateTime endTime = DateTime.Now; 
+            TimeSpan runTime = endTime - startTime; 
+            double ms = runTime.TotalMilliseconds; 
+            times.Add(ms); 
+            Console.WriteLine($"Step 1 done, with elapsed time {ms}");
+            return count; 
         }
 
 
@@ -83,7 +94,7 @@ namespace Olsson_Mikael
         /// <returns>The max difference between two elements in the array <paramref name="inputArray"/>.</returns>
         public uint MaxDiff_BruteForce(int[] inputArray)
         {
-            //loop over the array and find the max difference between two numbers
+            DateTime startTime = DateTime.Now;
             uint maxDiff = 0;
             for (int i = 0; i < inputArray.Length; i++)
             {
@@ -95,7 +106,13 @@ namespace Olsson_Mikael
                     }
                 }
             }
-            
+            DateTime endTime = DateTime.Now;
+            TimeSpan runTime = endTime - startTime;
+            double ms = runTime.TotalMilliseconds;
+            times.Add(ms);
+
+            Console.WriteLine($"Step 2 done, with elapsed time {ms}");
+
             return maxDiff;
         }
 
@@ -116,7 +133,8 @@ namespace Olsson_Mikael
         /// <returns>The max difference between two elements in the array <paramref name="inputArray"/>.</returns>
         public uint MaxDiff_Improved(int[] inputArray)
         {
-            //loop over the array and find the max difference between two numbers but do the calculate at the end
+            DateTime startTime = DateTime.Now;
+            
             uint maxDiff = 0;
             uint min = (uint)inputArray[0];
             uint max = (uint)inputArray[0];
@@ -132,31 +150,49 @@ namespace Olsson_Mikael
                 }
             }
             maxDiff = max - min;
+            
+            DateTime endTime = DateTime.Now;
+            TimeSpan runTime = endTime - startTime;
+            double ms = runTime.TotalMilliseconds;
+            times.Add(ms);
+            Console.WriteLine($"Step 3 done, with elapsed time {ms}");
+
             return maxDiff;
         }
 
-        // This would be O(n) after we've stripped all constants.
+        // This would be O(n^2) after we've stripped all constants.
 
         public void ReverseArray(int[] inputArray)
         {
-            //reverset the array as inefficiently as possible
-            int[] reversedArray = new int[inputArray.Length];
-            for (int i = 0; i < inputArray.Length; i++)
+            DateTime startTime = DateTime.Now;
+            
+            int i = 1;
+            while (i < inputArray.Length)
             {
-                reversedArray[i] = inputArray[inputArray.Length - 1 - i];
+                int nextValue = inputArray[i];
+                int j = i;
+                while(j > 0)
+                {
+                    inputArray[j] = inputArray[j - 1];
+                    j--;
+                }
+                inputArray[0] = nextValue;
+                i++;
             }
-            for (int i = 0; i < inputArray.Length; i++)
-            {
-                inputArray[i] = reversedArray[i];
-            }
-
+            
+            DateTime endTime = DateTime.Now;
+            TimeSpan runTime = endTime - startTime;
+            double ms = runTime.TotalMilliseconds;
+            times.Add(ms);
+            Console.WriteLine($"Step 4 done, with elapsed time {ms}");
         }
-        
+
         // This would be O(n) after we've stripped all constants.
 
         public void ReverseArray_Improved(int[] inputArray)
         {
-            //reverse the array as efficiently as possible
+            DateTime startTime = DateTime.Now;
+            
             int i = 0;
             int j = inputArray.Length - 1;
             while (i < j)
@@ -167,6 +203,12 @@ namespace Olsson_Mikael
                 i++;
                 j--;
             }
+
+            DateTime endTime = DateTime.Now;
+            TimeSpan runTime = endTime - startTime;
+            double ms = runTime.TotalMilliseconds;
+            times.Add(ms);
+            Console.WriteLine($"Step 5 done with elapsed time {ms}");
         }
 
         public DateTime start()
@@ -188,6 +230,17 @@ namespace Olsson_Mikael
             double ms = executionTime.TotalMilliseconds;
             
             return ms;
+        }
+
+        public void writeTimesToFile(string fileName)
+        {
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                foreach (double time in times)
+                {
+                    writer.WriteLine(time);
+                }
+            }
         }
 
     }
