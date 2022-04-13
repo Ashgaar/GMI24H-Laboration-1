@@ -19,7 +19,7 @@ namespace Olsson_Mikael
             for (int i = 0; i < 10; i++)
             {
                 int based = 10000000;
-                int increment = 2500000;
+                int increment = 250000;
                 int compare = 3;
                 int runs = based + i * increment;
                 Console.WriteLine($"Phase {i+1} out of 10, using size {runs}");
@@ -29,9 +29,9 @@ namespace Olsson_Mikael
                     arrayRuns[j] = random.Next(0, 250);
                 }
                 lab1.NOfOccurrences(arrayRuns, compare);
-                //lab1.MaxDiff_BruteForce(arrayRuns);
+                lab1.MaxDiff_BruteForce(arrayRuns);
                 lab1.MaxDiff_Improved(arrayRuns);
-                //lab1.ReverseArray(arrayRuns);
+                lab1.ReverseArray(arrayRuns);
                 lab1.ReverseArray_Improved(arrayRuns);
             }
 
@@ -41,15 +41,6 @@ namespace Olsson_Mikael
             Console.Write("Press enter to exit.");
             Console.ReadLine();
         }
-
-        /* Pseudo code
-         * counter = 0
-         * for each element in array
-         *  if element == i
-         *      counter ++
-         */
-
-        // This would be O(n) after we've stripped all constants.
         
         /// <summary>
         /// Returns the number of occurrences of a given number in an array.
@@ -75,17 +66,6 @@ namespace Olsson_Mikael
             Console.WriteLine($"Step 1 done, with elapsed time {ms}");
             return count; 
         }
-
-
-        /*  Pseudo code
-         *  maxDiff = 0
-         *  for each element in array
-         *      for each element + 1 in array
-         *          if element - element + 1 > maxDiff
-         *              maxDiff = element - element + 1
-         */
-
-        // This would be O(n^2) after we've stripped all constants.
 
         /// <summary>
         /// Returns the maximum difference between two elements in an array.
@@ -115,16 +95,6 @@ namespace Olsson_Mikael
 
             return maxDiff;
         }
-
-        /*  Pseudo code
-         *  maxDiff = 0
-         *  for each element in array
-         *      for each element + 1 in array
-         *          if element - element + 1 > maxDiff
-         *              maxDiff = element - element + 1
-         */
-
-        //This would be O(n) after we've stripped all constants.
 
         /// <summary>
         /// Returns the maximum difference between two elements in an array.
@@ -160,8 +130,10 @@ namespace Olsson_Mikael
             return maxDiff;
         }
 
-        // This would be O(n^2) after we've stripped all constants.
-
+        /// <summary>
+        /// Reverses the order of the elements in an array.
+        /// </summary>
+        /// <param name="inputArray">The array to be reversed.</param>
         public void ReverseArray(int[] inputArray)
         {
             DateTime startTime = DateTime.Now;
@@ -186,9 +158,11 @@ namespace Olsson_Mikael
             times.Add(ms);
             Console.WriteLine($"Step 4 done, with elapsed time {ms}");
         }
-
-        // This would be O(n) after we've stripped all constants.
-
+        
+        /// <summary>
+        /// Reverses the order of the elements in an array.
+        /// </summary>
+        /// <param name="inputArray">The array to be reversed.</param>
         public void ReverseArray_Improved(int[] inputArray)
         {
             DateTime startTime = DateTime.Now;
