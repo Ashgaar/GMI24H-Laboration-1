@@ -8,40 +8,6 @@ namespace Olsson_Mikael
 {
     public class Laboration_1 : ILaboration_1
     {
-        List<double> times = new List<double>();
-        
-        static void Main(string[] args)
-        {
-            Laboration_1 lab1 = new Laboration_1();
-            Random random = new Random();
-
-
-            for (int i = 0; i < 10; i++)
-            {
-                int based = 10000000;
-                int increment = 250000;
-                int compare = 3;
-                int runs = based + i * increment;
-                Console.WriteLine($"Phase {i+1} out of 10, using size {runs}");
-                int[] arrayRuns = new int[runs];
-                for (int j = 0; j < arrayRuns.Length; j++)
-                {
-                    arrayRuns[j] = random.Next(0, 250);
-                }
-                lab1.NOfOccurrences(arrayRuns, compare);
-                lab1.MaxDiff_BruteForce(arrayRuns);
-                lab1.MaxDiff_Improved(arrayRuns);
-                lab1.ReverseArray(arrayRuns);
-                lab1.ReverseArray_Improved(arrayRuns);
-            }
-
-            lab1.writeTimesToFile("../../runTime.csv");
-
-            
-            Console.Write("Press enter to exit.");
-            Console.ReadLine();
-        }
-        
         /// <summary>
         /// Returns the number of occurrences of a given number in an array.
         /// </summary>
@@ -50,7 +16,6 @@ namespace Olsson_Mikael
         /// <returns>The number of occurrences of <paramref name="value"/> in <paramref name="inputArray"/>.</returns>
         public uint NOfOccurrences(int[] inputArray, int value)
         {
-            DateTime startTime = DateTime.Now;
             uint count = 0; //O(1)
             for (int i = 0; i < inputArray.Length; i++) //O(n)
             {
@@ -59,11 +24,7 @@ namespace Olsson_Mikael
                     count++; //O(1)
                 }
             }
-            DateTime endTime = DateTime.Now; 
-            TimeSpan runTime = endTime - startTime; 
-            double ms = runTime.TotalMilliseconds; 
-            times.Add(ms); 
-            Console.WriteLine($"Step 1 done, with elapsed time {ms}");
+
             return count; 
         }
 
@@ -74,7 +35,6 @@ namespace Olsson_Mikael
         /// <returns>The max difference between two elements in the array <paramref name="inputArray"/>.</returns>
         public uint MaxDiff_BruteForce(int[] inputArray)
         {
-            DateTime startTime = DateTime.Now;
             uint maxDiff = 0;
             for (int i = 0; i < inputArray.Length; i++)
             {
@@ -86,12 +46,6 @@ namespace Olsson_Mikael
                     }
                 }
             }
-            DateTime endTime = DateTime.Now;
-            TimeSpan runTime = endTime - startTime;
-            double ms = runTime.TotalMilliseconds;
-            times.Add(ms);
-
-            Console.WriteLine($"Step 2 done, with elapsed time {ms}");
 
             return maxDiff;
         }
@@ -103,30 +57,25 @@ namespace Olsson_Mikael
         /// <returns>The max difference between two elements in the array <paramref name="inputArray"/>.</returns>
         public uint MaxDiff_Improved(int[] inputArray)
         {
-            DateTime startTime = DateTime.Now;
-            
             uint maxDiff = 0;
-            uint min = (uint)inputArray[0];
-            uint max = (uint)inputArray[0];
-            for (int i = 1; i < inputArray.Length; i++)
+            int min = 300000000;
+            int max = 0;
+            if (inputArray.Length > 0)
             {
-                if (inputArray[i] < min)
+                for (int i = 0; i < inputArray.Length; i++)
                 {
-                    min = (uint)inputArray[i];
+                    if (inputArray[i] < min)
+                    {
+                        min = inputArray[i];
+                    }
+                    if (inputArray[i] > max)
+                    {
+                        max = inputArray[i];
+                    }
                 }
-                if (inputArray[i] > max)
-                {
-                    max = (uint)inputArray[i];
-                }
-            }
-            maxDiff = max - min;
-            
-            DateTime endTime = DateTime.Now;
-            TimeSpan runTime = endTime - startTime;
-            double ms = runTime.TotalMilliseconds;
-            times.Add(ms);
-            Console.WriteLine($"Step 3 done, with elapsed time {ms}");
+                maxDiff = (uint)(max - min);
 
+            }
             return maxDiff;
         }
 
@@ -136,8 +85,6 @@ namespace Olsson_Mikael
         /// <param name="inputArray">The array to be reversed.</param>
         public void ReverseArray(int[] inputArray)
         {
-            DateTime startTime = DateTime.Now;
-            
             int i = 1;
             while (i < inputArray.Length)
             {
@@ -151,12 +98,6 @@ namespace Olsson_Mikael
                 inputArray[0] = nextValue;
                 i++;
             }
-            
-            DateTime endTime = DateTime.Now;
-            TimeSpan runTime = endTime - startTime;
-            double ms = runTime.TotalMilliseconds;
-            times.Add(ms);
-            Console.WriteLine($"Step 4 done, with elapsed time {ms}");
         }
         
         /// <summary>
@@ -165,8 +106,6 @@ namespace Olsson_Mikael
         /// <param name="inputArray">The array to be reversed.</param>
         public void ReverseArray_Improved(int[] inputArray)
         {
-            DateTime startTime = DateTime.Now;
-            
             int i = 0;
             int j = inputArray.Length - 1;
             while (i < j)
@@ -177,45 +116,6 @@ namespace Olsson_Mikael
                 i++;
                 j--;
             }
-
-            DateTime endTime = DateTime.Now;
-            TimeSpan runTime = endTime - startTime;
-            double ms = runTime.TotalMilliseconds;
-            times.Add(ms);
-            Console.WriteLine($"Step 5 done with elapsed time {ms}");
         }
-
-        public DateTime start()
-        {
-            DateTime startTime = DateTime.Now;
-            return startTime;
-        }
-
-        public DateTime stop()
-        {
-            DateTime stopTime = DateTime.Now;
-            return stopTime;
-        }
-
-        
-        public double executionTime(DateTime startTime, DateTime stopTime)
-        {
-            TimeSpan executionTime = stopTime - startTime;
-            double ms = executionTime.TotalMilliseconds;
-            
-            return ms;
-        }
-
-        public void writeTimesToFile(string fileName)
-        {
-            using (StreamWriter writer = new StreamWriter(fileName))
-            {
-                foreach (double time in times)
-                {
-                    writer.WriteLine(time);
-                }
-            }
-        }
-
     }
 }
